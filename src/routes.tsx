@@ -6,7 +6,7 @@ export default function Routes() {
 
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: "dashboard",
       element: <DashboardLayout />,
       children: [
         {

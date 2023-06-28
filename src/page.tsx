@@ -1,71 +1,47 @@
-import { Pie } from '@ant-design/plots';
-import { Button } from 'antd';
-import { useState } from "react";
+import { Popover, Tooltip } from "antd";
+import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
+import data from "./brazil-states.json";
 
 const Page = () => {
-  const data = [
-    {
-      type: 'Exemplo1',
-      value: 27,
-    },
-    {
-      type: 'Exemplo 2',
-      value: 25,
-    },
-    {
-      type: 'Exemplo 3',
-      value: 18,
-    },
-    {
-      type: 'Exemplo 4',
-      value: 15,
-    },
-    {
-      type: 'Exemplo 5',
-      value: 10,
-    },
-    {
-      type: 'Exemplo 6',
-      value: 5,
-    },
-  ];
 
-  const [dataState, setDataState] = useState(data);
+  const popOverContent =  (
+  <>
+    <p>Envorimental: Quantia</p>
+  </>
+  );
 
-  const config = {
-    appendPadding: 10,
-    data: dataState,
-    angleField: 'value',
-    colorField: 'type',
-    radius: 0.9,
-    label: {
-      type: 'inner',
-      offset: '-30%',
-      content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
-      style: {
-        fontSize: 14,
-        textAlign: 'center',
-      },
-    },
-    interactions: [
-      {
-        type: 'element-active',
-      },
-      {
-        type: "element-highlight"
-      }
-    ],
-  };
+  return (
+  <ComposableMap
+    projection="geoEqualEarth"
+  >
+    <ZoomableGroup center={[-50, -13]} zoom={3.5}>
+      <Geographies geography={data}>
+        {({ geographies }) => geographies.map((geo) => {
 
-  return (<>
-    <Button
-      type="primary"
-      onClick={() => { }}
-    >
-      Remove 1
-    </Button>
-    <Pie {...config} />
-  </>);
+          return(
+              <Popover key={geo.rsmKey} content={popOverContent} title={geo.properties.name}>
+                <Geography
+                  geography={geo}
+                  style={{
+                    default: {
+                      fill: "#EEE",
+                    },
+                    hover: {
+                      fill: "#F53",
+                    },
+                    pressed: {
+                      fill: "#E42",
+                    },
+                  }}
+                />
+              </Popover>
+            )})
+          }
+      </Geographies>
+    </ZoomableGroup>
+  </ComposableMap>
+  );
+
 }
 
 export default Page;
